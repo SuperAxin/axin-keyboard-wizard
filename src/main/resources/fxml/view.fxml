@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.axin.axinkeyboardwizard.services.keyboard.KeyboardController"
+      alignment="CENTER"
+      spacing="20"
+      prefWidth="450"
+      prefHeight="400">
+
+    <padding>
+        <Insets top="25" right="30" bottom="25" left="30"/>
+    </padding>
+
+    <Label text="Axin 鍵盤精靈"
+           style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <!-- 選擇按鍵 -->
+    <HBox alignment="CENTER_LEFT" spacing="15">
+
+        <Label text="按鍵:"
+               prefWidth="110"/>
+
+        <ComboBox fx:id="keyComboBox"
+                  prefWidth="220"/>
+
+    </HBox>
+
+    <!-- 按鍵間隔 -->
+    <HBox alignment="CENTER_LEFT" spacing="15">
+
+        <Label text="間隔秒速:"
+               prefWidth="110"/>
+
+        <TextField fx:id="intervalField"
+                   prefWidth="220"/>
+
+    </HBox>
+
+    <!-- 執行狀態 -->
+    <HBox alignment="CENTER" spacing="10">
+
+        <Label text="Status:"/>
+
+        <Label fx:id="statusLabel"
+               text="Stopped"
+               style="-fx-font-weight: bold;"/>
+
+    </HBox>
+
+    <!-- 開始與停止 -->
+    <HBox alignment="CENTER" spacing="20">
+
+        <Button fx:id="startButton"
+                text="Start"
+                onAction="#handleStart"
+                prefWidth="130"/>
+
+        <Button fx:id="stopButton"
+                text="Stop"
+                onAction="#handleStop"
+                prefWidth="130"/>
+
+    </HBox>
+
+</VBox>
