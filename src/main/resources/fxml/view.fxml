@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.axin.axinkeyboardwizard.services.keyboard.KeyboardController"
+      fx:controller="com.axin.axinkeyboardwizard.services.fx.FxController"
       alignment="CENTER"
       spacing="20"
       prefWidth="450"
@@ -18,7 +18,6 @@
     <Label text="Axin 鍵盤精靈"
            style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
 
-    <!-- 選擇按鍵 -->
     <HBox alignment="CENTER_LEFT" spacing="15">
 
         <Label text="按鍵:"
@@ -29,7 +28,6 @@
 
     </HBox>
 
-    <!-- 按鍵間隔 -->
     <HBox alignment="CENTER_LEFT" spacing="15">
 
         <Label text="間隔秒速:"
@@ -40,18 +38,16 @@
 
     </HBox>
 
-    <!-- 執行狀態 -->
     <HBox alignment="CENTER" spacing="10">
 
-        <Label text="Status:"/>
+        <Label text="執行狀態:"/>
 
         <Label fx:id="statusLabel"
-               text="Stopped"
+               text="停止"
                style="-fx-font-weight: bold;"/>
 
     </HBox>
 
-    <!-- 開始與停止 -->
     <HBox alignment="CENTER" spacing="20">
 
         <Button fx:id="startButton"

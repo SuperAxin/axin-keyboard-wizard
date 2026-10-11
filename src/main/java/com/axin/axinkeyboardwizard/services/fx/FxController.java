@@ -1,4 +1,4 @@
-package com.axin.axinkeyboardwizard.services.keyboard;
+package com.axin.axinkeyboardwizard.services.fx;
 
 import com.axin.axinkeyboardwizard.services.keyboard.KeyboardService;
 import com.axin.axinkeyboardwizard.services.keyboard.model.KeyboardConfig;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import java.awt.event.KeyEvent;
 
 @Component
-public class KeyboardController {
+public class FxController {
 
   private final KeyboardService keyboardService;
 
@@ -32,8 +32,8 @@ public class KeyboardController {
 
   @FXML
   private Button stopButton;
-  private Timeline statusTimer;
-  public KeyboardController(KeyboardService keyboardService) {
+
+  public FxController(KeyboardService keyboardService) {
     this.keyboardService = keyboardService;
   }
 
@@ -45,7 +45,7 @@ public class KeyboardController {
     keyComboBox.setValue("F");
     intervalField.setText("5");
 
-    statusTimer = new Timeline(new KeyFrame(Duration.millis(200), event -> updateStatus()));
+    Timeline statusTimer = new Timeline(new KeyFrame(Duration.millis(200), event -> updateStatus()));
 
     statusTimer.setCycleCount(Timeline.INDEFINITE);
     statusTimer.play();
@@ -59,11 +59,10 @@ public class KeyboardController {
     try {
 
       String selectedKey = keyComboBox.getValue();
+      int keyCode = resolveKeyCode(selectedKey);
 
       long intervalMillis = Long.parseLong(intervalField.getText()
               .trim());
-
-      int keyCode = resolveKeyCode(selectedKey);
 
       KeyboardConfig config = new KeyboardConfig(keyCode, intervalMillis);
 
@@ -83,9 +82,7 @@ public class KeyboardController {
 
   @FXML
   private void handleStop() {
-
     keyboardService.stop();
-
     updateStatus();
   }
 
@@ -93,7 +90,7 @@ public class KeyboardController {
 
     boolean running = keyboardService.isRunning();
 
-    statusLabel.setText(running ? "Running" : "Stopped");
+    statusLabel.setText(running ? "執行中" : "停止");
 
     startButton.setDisable(running);
     stopButton.setDisable(!running);
