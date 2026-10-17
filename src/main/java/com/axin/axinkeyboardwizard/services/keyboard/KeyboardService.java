@@ -3,22 +3,18 @@ package com.axin.axinkeyboardwizard.services.keyboard;
 import com.axin.axinkeyboardwizard.services.keyboard.model.KeyboardConfig;
 import jakarta.annotation.PreDestroy;
 import lombok.Getter;
+import com.github.kwhat.jnativehook.GlobalScreen;
+import com.github.kwhat.jnativehook.NativeHookException;
+import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import org.springframework.stereotype.Service;
-
-import java.awt.*;
 
 @Service
 public class KeyboardService {
 
-  private final Robot robot;
   private Thread workerThread;
 
   @Getter
   private volatile boolean running = false;
-
-  public KeyboardService() throws AWTException {
-    this.robot = new Robot();
-  }
 
   public synchronized void start(KeyboardConfig config) {
     if (running) {
@@ -33,6 +29,8 @@ public class KeyboardService {
       );
     }
 
+    ensureNativeHookRegistered();
+
     running = true;
 
     workerThread = new Thread(() -> {
@@ -40,12 +38,12 @@ public class KeyboardService {
       try {
         while (running && !Thread.currentThread().isInterrupted()) {
 
-          robot.keyPress(config.getKeyCode());
+          postKeyEvent(NativeKeyEvent.NATIVE_KEY_PRESSED, config.getKeyCode());
 
           try {
             Thread.sleep(100);
           } finally {
-            robot.keyRelease(config.getKeyCode());
+            postKeyEvent(NativeKeyEvent.NATIVE_KEY_RELEASED, config.getKeyCode());
           }
 
           Thread.sleep(config.getIntervalMillis() * 1000 );
@@ -67,6 +65,34 @@ public class KeyboardService {
     workerThread.start();
   }
 
+  private void ensureNativeHookRegistered() {
+    if (GlobalScreen.isNativeHookRegistered()) {
+      return;
+    }
+
+    try {
+      GlobalScreen.registerNativeHook();
+    } catch (NativeHookException e) {
+      throw new IllegalStateException(
+              "無法啟用鍵盤控制，請在 macOS 系統設定中允許本程式使用輔助使用權限",
+              e
+      );
+    }
+  }
+
+  private void postKeyEvent(int eventType, int keyCode) {
+    NativeKeyEvent event = new NativeKeyEvent(
+            eventType,
+            0,
+            0,
+            keyCode,
+            NativeKeyEvent.CHAR_UNDEFINED,
+            NativeKeyEvent.KEY_LOCATION_STANDARD
+    );
+
+    GlobalScreen.postNativeEvent(event);
+  }
+
   public synchronized void stop() {
 
     running = false;
@@ -79,5 +105,13 @@ public class KeyboardService {
   @PreDestroy
   public void shutdown() {
     stop();
+
+    if (GlobalScreen.isNativeHookRegistered()) {
+      try {
+        GlobalScreen.unregisterNativeHook();
+      } catch (NativeHookException e) {
+        System.err.println("無法關閉 JNativeHook：" + e.getMessage());
+      }
+    }
   }
 }

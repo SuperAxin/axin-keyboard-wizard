@@ -9,9 +9,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.util.Duration;
 
+import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import org.springframework.stereotype.Component;
-
-import java.awt.event.KeyEvent;
 
 @Component
 public class FxController {
@@ -107,21 +106,21 @@ public class FxController {
 
     return switch (key) {
 
-      case "A" -> KeyEvent.VK_A;
-      case "B" -> KeyEvent.VK_B;
-      case "C" -> KeyEvent.VK_C;
-      case "D" -> KeyEvent.VK_D;
-      case "E" -> KeyEvent.VK_E;
-      case "F" -> KeyEvent.VK_F;
+      case "A" -> NativeKeyEvent.VC_A;
+      case "B" -> NativeKeyEvent.VC_B;
+      case "C" -> NativeKeyEvent.VC_C;
+      case "D" -> NativeKeyEvent.VC_D;
+      case "E" -> NativeKeyEvent.VC_E;
+      case "F" -> NativeKeyEvent.VC_F;
 
-      case "SPACE" -> KeyEvent.VK_SPACE;
-      case "ENTER" -> KeyEvent.VK_ENTER;
+      case "SPACE" -> NativeKeyEvent.VC_SPACE;
+      case "ENTER" -> NativeKeyEvent.VC_ENTER;
 
-      case "F1" -> KeyEvent.VK_F1;
-      case "F2" -> KeyEvent.VK_F2;
-      case "F3" -> KeyEvent.VK_F3;
-      case "F4" -> KeyEvent.VK_F4;
-      case "F5" -> KeyEvent.VK_F5;
+      case "F1" -> NativeKeyEvent.VC_F1;
+      case "F2" -> NativeKeyEvent.VC_F2;
+      case "F3" -> NativeKeyEvent.VC_F3;
+      case "F4" -> NativeKeyEvent.VC_F4;
+      case "F5" -> NativeKeyEvent.VC_F5;
 
       default -> throw new IllegalArgumentException("不支援的按鍵：" + key);
     };
