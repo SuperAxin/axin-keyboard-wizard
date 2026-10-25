@@ -7,6 +7,7 @@ import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.NativeHookException;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import org.springframework.stereotype.Service;
+import com.sun.jna.Platform;
 
 @Service
 public class KeyboardService {
@@ -29,7 +30,11 @@ public class KeyboardService {
       );
     }
 
-    ensureNativeHookRegistered();
+    if (Platform.isWindows()) {
+      WindowsKeyboardInput.createInput(config.getKeyCode(), false);
+    } else {
+      ensureNativeHookRegistered();
+    }
 
     running = true;
 
@@ -81,6 +86,11 @@ public class KeyboardService {
   }
 
   private void postKeyEvent(int eventType, int keyCode) {
+    if (Platform.isWindows()) {
+      WindowsKeyboardInput.send(keyCode, eventType == NativeKeyEvent.NATIVE_KEY_RELEASED);
+      return;
+    }
+
     NativeKeyEvent event = new NativeKeyEvent(
             eventType,
             0,
